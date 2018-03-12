@@ -1,0 +1,27 @@
+version: "2"
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/var/www/html
+    expose:
+      - "9000"
+
+  server:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./sites/local.vhost:/etc/nginx/conf.d/local.conf
+    volumes_from:
+      - app
+
+  db:
+    image: mysql:5.5.59
+    restart: always
+    environment:
+      MYSQL_DATABASE: craftcmsdb
+      MYSQL_USER: craftcmsdb
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password123
